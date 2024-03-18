@@ -895,6 +895,14 @@ ifeq ($(strip $(BLUETOOTH_ENABLE)), yes)
         SRC += $(DRIVER_PATH)/bluetooth/bluetooth.c
         SRC += $(DRIVER_PATH)/bluetooth/rn42.c
     endif
+ifeq ($(strip $(OPENRGB_ENABLE)), yes)
+     ifeq ($(strip $(VIA_ENABLE)), yes)
+        $(error OPENRGB_ENABLE and VIA_ENABLE cannot currently be enabled simultaneously)
+    endif
+    RAW_ENABLE := yes
+    SRC += $(QUANTUM_DIR)/openrgb.c
+    OPT_DEFS += -DOPENRGB_ENABLE
+endif
 endif
 
 ENCODER_ENABLE ?= no
