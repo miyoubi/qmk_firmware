@@ -165,3 +165,31 @@ __attribute__((weak)) const key_override_t* key_override_get(uint16_t key_overri
 }
 
 #endif // defined(KEY_OVERRIDE_ENABLE)
+// Key Interrupt
+
+#if defined(KEY_INTERRUPT_ENABLE)
+
+uint16_t key_interrupt_count_raw(void) {
+    return ((uint16_t)sizeof(key_interrupt_list) / ((NUM_KEY_INTERRUPTS) * sizeof(uint16_t)));
+}
+__attribute__((weak)) uint16_t key_interrupt_count(void) {
+    return key_interrupt_count_raw();
+}
+
+uint16_t key_interrupt_get_keycode_press_at_idx_raw(uint16_t idx) {
+    return key_interrupt_list[idx][0];
+}
+
+uint16_t key_interrupt_get_keycode_unpress_at_idx_raw(uint16_t idx) {
+    return key_interrupt_list[idx][1];
+}
+
+__attribute__((weak)) uint16_t key_interrupt_get_keycode_press_at_idx(uint16_t idx) {
+    return key_interrupt_get_keycode_press_at_idx_raw(idx);
+}
+
+__attribute__((weak)) uint16_t key_interrupt_get_keycode_unpress_at_idx(uint16_t idx) {
+    return key_interrupt_get_keycode_unpress_at_idx_raw(idx);
+}
+
+#endif // defined(KEY_INTERRUPT_ENABLE)
