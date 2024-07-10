@@ -38,7 +38,7 @@ bool process_key_interrupt_user(uint16_t keycode, keyrecord_t *record);
 ## Process Key Interrupt Example
 
 ```c
-const uint16_t PROGMEM key_interrupt_list[][NUM_INTERRUPT_KEYCODES] = {
+const key_interrupt_t PROGMEM key_interrupt_list[] = {
     // on key down
     //       |    key to be released
     //       |     |

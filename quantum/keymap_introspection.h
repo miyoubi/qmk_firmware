@@ -117,12 +117,8 @@ const key_override_t* key_override_get(uint16_t key_override_idx);
 uint16_t key_interrupt_count_raw(void);
 // Get the number of key interrupts defined in the user's keymap, potentially stored dynamically
 uint16_t key_interrupt_count(void);
-// Get the keycode for the key press, stored in firmware rather than any other persistent storage
-uint16_t key_interrupt_get_keycode_press_at_idx_raw(uint16_t idx);
-// Get the keycode for the key unpress, stored in firmware, potentially stored dynamically
-uint16_t key_interrupt_get_keycode_press_at_idx(uint16_t idx);
-// Get the keycode for the key unpress, stored in firmware rather than any other persistent storage
-uint16_t key_interrupt_get_keycode_unpress_at_idx_raw(uint16_t idx);
-// Get the keycode for the key unpress, stored in firmware, potentially stored dynamically
-uint16_t key_interrupt_get_keycode_unpress_at_idx(uint16_t idx);
+// Get the keycodes for the key interrupt, stored in firmware rather than any other persistent storage
+key_interrupt_t key_interrupt_get_raw(uint16_t idx);
+// Get the keycodes for the key interrupt, stored in firmware, potentially stored dynamically
+key_interrupt_t key_interrupt_get(uint16_t idx);
 #endif // defined(KEY_INTERRUPT_ENABLE)

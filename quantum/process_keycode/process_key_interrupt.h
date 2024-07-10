@@ -8,6 +8,7 @@
 
 #define NUM_INTERRUPT_KEYCODES 2
 
+typedef uint16_t key_interrupt_t[NUM_INTERRUPT_KEYCODES];
 bool process_key_interrupt(uint16_t keycode, keyrecord_t *record);
 bool process_key_interrupt_user(uint16_t keycode, keyrecord_t *record);
 
