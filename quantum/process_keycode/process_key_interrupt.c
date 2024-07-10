@@ -112,8 +112,9 @@ bool process_key_interrupt(uint16_t keycode, keyrecord_t *record) {
 
     // loop through all the keyup and keydown events
     for (int i = 0; i < key_interrupt_count(); i++) {
-        if (keycode == key_interrupt_get_keycode_press_at_idx(i)) {
-            del_key(key_interrupt_get_keycode_unpress_at_idx(i));
+        key_interrupt_t key_interrupt = key_interrupt_get(i);
+        if (keycode == key_interrupt.press) {
+            del_key(key_interrupt.unpress);
         }
     }
 

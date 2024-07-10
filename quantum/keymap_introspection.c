@@ -176,11 +176,13 @@ __attribute__((weak)) uint16_t key_interrupt_count(void) {
 }
 
 key_interrupt_t key_interrupt_get_raw(uint16_t idx) {
-    return key_interrupt_list[idx];
+    key_interrupt_t ret;
+    memcpy_P(&ret, &key_interrupt_list[idx], sizeof(key_interrupt_t));
+    return ret;
 }
 
 __attribute__((weak)) key_interrupt_t key_interrupt_get(uint16_t idx) {
-    return key_interrupt_at_idx_raw(idx);
+    return key_interrupt_get_raw(idx);
 }
 
 #endif // defined(KEY_INTERRUPT_ENABLE)

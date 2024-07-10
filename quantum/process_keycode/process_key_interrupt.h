@@ -8,7 +8,8 @@
 
 #define NUM_INTERRUPT_KEYCODES 2
 
-typedef uint16_t key_interrupt_t[NUM_INTERRUPT_KEYCODES];
+typedef struct key_interrupt_t { uint16_t press, unpress; } key_interrupt_t;
+
 bool process_key_interrupt(uint16_t keycode, keyrecord_t *record);
 bool process_key_interrupt_user(uint16_t keycode, keyrecord_t *record);
 
