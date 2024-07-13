@@ -6,7 +6,6 @@
 # --------------------------------------------------------------------------------
 
 KEY_INTERRUPT_ENABLE = yes
-CONSOLE_ENABLE=yes
 
 INTROSPECTION_KEYMAP_C = test_key_interrupts.c
 

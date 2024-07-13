@@ -22,16 +22,16 @@
 #include "keymap_introspection.h"
 #include "debug.h"
 
+// Max 10 since we only have 10 fingers to press keys
 #define KEYREPORT_BUFFER_SIZE 10
+
+_Static_assert(KEYREPORT_BUFFER_SIZE <= 16, "KEYREPORT_BUFFER_SIZE must be less than or equal to 16 due to bitfield usage");
 
 // key interrupt up stroke buffer
 uint16_t buffer_keyreports[KEYREPORT_BUFFER_SIZE];
 
-// is the next free one
+// track the next free index
 int buffer_keyreport_count = 0;
-
-// temp buffer to store keycodes
-uint16_t buffer_keyreports_temp[KEYREPORT_BUFFER_SIZE];
 
 /**
  * @brief function for querying the enabled state of key interrupt
@@ -72,12 +72,12 @@ void key_interrupt_toggle(void) {
 
 /**
  * @brief function for querying the enabled state of key interrupt recovery
+ * Requires both key interrupt and key interrupt recovery to be enabled
  *
  * @return true if enabled
  * @return false if disabled
  */
 bool key_interrupt_recovery_is_enabled(void) {
-    // should check both
     return keymap_config.key_interrupt_enable && keymap_config.key_interrupt_recovery_enable;
 }
 
@@ -121,26 +121,33 @@ __attribute__((weak)) bool process_key_interrupt_user(uint16_t keycode, keyrecor
 }
 
 // check if key already in buffer
-bool key_interrupt_is_key_in_buffer(uint16_t keycode) {
+int get_key_index_in_buffer(uint16_t keycode) {
     for (int i = 0; i < buffer_keyreport_count; i++) {
         if (buffer_keyreports[i] == keycode) {
-            return true;
+            ac_dprintf("Key Interrupt: Found Keycode <%d> index <%d>\n", keycode, i);
+            return i;
         }
     }
-    return false;
+    return -1;
 }
 
+// add keycode to buffer only if not already in buffer
 void add_key_buffer(uint16_t keycode) {
-    if (key_interrupt_is_key_in_buffer(keycode)) {
+    if (get_key_index_in_buffer(keycode) > 0) {
+        ac_dprintf("Key Interrupt: %d Key already in buffer\n", keycode);
         return;
     }
 
+    // sanity check don't write past the buffer size
     if (buffer_keyreport_count >= KEYREPORT_BUFFER_SIZE) {
+        ac_dprintf("Key Interrupt: Buffer full\n");
         return;
     }
 
     buffer_keyreports[buffer_keyreport_count] = keycode;
     buffer_keyreport_count++;
+
+    ac_dprintf("Key Interrupt: Added <%d>\n", keycode);
 }
 
 // remove keycode and shift buffer
@@ -154,22 +161,15 @@ void del_key_buffer(uint16_t keycode) {
             break;
         }
     }
-}
 
-// remove keycode, dont care about shifting buffer
-void del_key_buffer_temp(uint16_t keycode, int end_index) {
-    for (int i = 0; i < end_index; i++) {
-        if (buffer_keyreports_temp[i] == keycode) {
-            buffer_keyreports_temp[i] = 0;
-            break;
-        }
-    }
+    ac_dprintf("Key Interrupt: Removed <%d>\n", keycode);
 }
 
 // check if keycode is in the interrupt press list
 bool key_interrupt_is_key_in_press_list(uint16_t keycode) {
     for (int i = 0; i < key_interrupt_count(); i++) {
         if (key_interrupt_get(i).press == keycode) {
+            ac_dprintf("Key Interrupt: Keycode <%d> in key_interrupt_list\n", keycode);
             return true;
         }
     }
@@ -239,13 +239,6 @@ bool process_key_interrupt(uint16_t keycode, keyrecord_t *record) {
         }
     }
 
-    // no key interrupt to process
-
-    // copy buffer to temp buffer
-    memcpy(buffer_keyreports_temp, buffer_keyreports, sizeof(buffer_keyreports));
-
-    ac_dprintf("buffer_keyreport_count: %d\n", buffer_keyreport_count);
-
     if (record->event.pressed) {
         for (int i = 0; i < key_interrupt_count(); i++) {
             key_interrupt_t key_interrupt = key_interrupt_get(i);
@@ -254,38 +247,45 @@ bool process_key_interrupt(uint16_t keycode, keyrecord_t *record) {
             }
         }
     } else {
+        uint16_t bitfield_keyreports         = 0xFF << (16 - buffer_keyreport_count);
+        uint16_t bitfield_keyreports_scratch = bitfield_keyreports;
+
         for (int j = buffer_keyreport_count - 1; j >= 0; j--) {
+            uint16_t current_bitmask = 1 << (16 - j);
+            // skip if bit is not set
+            if (!(bitfield_keyreports_scratch & current_bitmask)) {
+                continue;
+            }
+
             for (int i = 0; i < key_interrupt_count(); i++) {
                 key_interrupt_t key_interrupt = key_interrupt_get(i);
                 // if key in buffer is the same as the key interrupt press
-                if (key_interrupt.press == buffer_keyreports_temp[j]) {
+                if ((key_interrupt.press == buffer_keyreports[j])) {
                     // if key interrupt unpress is in buffer
-                    if (key_interrupt_is_key_in_buffer(key_interrupt.unpress)) {
+                    int index = get_key_index_in_buffer(key_interrupt.unpress);
+                    if (index > 0) {
                         // remove key interrupt unpress from buffer
-                        del_key_buffer_temp(key_interrupt.unpress, j);
+                        bitfield_keyreports_scratch &= ~(1 << (16 - index));
                     }
                 }
             }
         }
 
-        // print temp buffer
-        for (int i = 0; i < buffer_keyreport_count; i++) {
-            ac_dprintf("buffer_keyreports_temp[%d]: %d\n", i, buffer_keyreports_temp[i]);
-        }
-
-        // print buffer
-        for (int i = 0; i < buffer_keyreport_count; i++) {
-            ac_dprintf("buffer_keyreports[%d]: %d\n", i, buffer_keyreports[i]);
-        }
-
         // compare buffer and temp buffer
+        uint16_t comparison = bitfield_keyreports ^ bitfield_keyreports_scratch;
+
+        // bits that are 1 means it is different
+        // if there are differences and bit in bitfield_keyreports_scratch is 0, then del key
+        // if there are no differences then add key
+
         for (int i = 0; i < buffer_keyreport_count; i++) {
-            if (buffer_keyreports[i] != buffer_keyreports_temp[i]) {
-                if (buffer_keyreports_temp[i] == 0) {
+            uint16_t bitmask = 1 << (16 - i);
+            if (comparison & bitmask) {
+                if (~(bitfield_keyreports_scratch & bitmask)) {
                     del_key(buffer_keyreports[i]);
                 }
             } else {
-                add_key(buffer_keyreports_temp[i]);
+                add_key(buffer_keyreports[i]);
             }
         }
     }
