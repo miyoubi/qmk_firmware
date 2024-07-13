@@ -5,7 +5,7 @@
 #include "quantum.h"
 
 //clang-format off
-const uint16_t PROGMEM key_interrupt_list[][NUM_INTERRUPT_KEYCODES] = {
+const key_interrupt_t PROGMEM key_interrupt_list[] = {
     [0] = {KC_D, KC_A},
     [1] = {KC_A, KC_D},
     [2] = {KC_A, KC_F},

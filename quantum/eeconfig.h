@@ -112,6 +112,7 @@ typedef struct PACKED {
 #define EECONFIG_KEYMAP_SWAP_ESC_CAPS (1 << 11)
 #define EECONFIG_KEYMAP_AUTOCORRECT (1 << 12)
 #define EECONFIG_KEYMAP_KEY_INTERRUPT (1 << 13)
+#define EECONFIG_KEYMAP_KEY_INTERRUPT_RECOVERY (1 << 14)
 
 bool eeconfig_is_enabled(void);
 bool eeconfig_is_disabled(void);

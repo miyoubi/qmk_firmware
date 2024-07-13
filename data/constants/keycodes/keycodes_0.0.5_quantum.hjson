@@ -20,6 +20,27 @@
             "aliases": [
                 "KI_TOGG"
             ]
-        }
+        },
+        "0x7C7E": {
+            "group": "quantum",
+            "key": "QK_KEY_INTERRUPT_RECOVERY_ON",
+            "aliases": [
+                "KI_REON"
+            ]
+        },
+        "0x7C7F": {
+            "group": "quantum",
+            "key": "QK_KEY_INTERRUPT_RECOVERY_OFF",
+            "aliases": [
+                "KI_REOF"
+            ]
+        },
+        "0x7C80": {
+            "group": "quantum",
+            "key": "QK_KEY_INTERRUPT_RECOVERY_TOGGLE",
+            "aliases": [
+                "KI_RETG"
+            ]
+        },
     }
 }
