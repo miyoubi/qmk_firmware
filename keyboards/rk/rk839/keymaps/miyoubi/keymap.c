@@ -16,9 +16,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [1] = LAYOUT( /* FN */
         KC_GRV,   KC_F1,      KC_F2,      KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,     KC_F11,   KC_F12,   _______,   _______,
-        _______,  _______,    _______,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    KC_HOME,  KC_SCRL,  RGB_MOD,   KC_INS,
+        KI_TOGG,  _______,    _______,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    KC_HOME,  KC_SCRL,  RGB_MOD,   KC_INS,
         _______,  _______,    _______,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    KC_PSCR,            _______,   KC_PAUSE,
-        _______,  _______,    _______,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,            _______,   _______,
+        KI_RETG,  _______,    _______,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,            _______,   _______,
         _______,  GU_TOGG,    _______,                        EE_CLR,                       _______,  _______,              _______,            _______,   _______
         ),
 };
@@ -29,4 +29,13 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [1] = {ENCODER_CCW_CW(_______, _______)},
 };
 #endif
+const key_interrupt_t PROGMEM key_interrupt_list[] = {
+    // on key down
+    //       |    key to be released
+    //       |     |
+    [0] = {KC_D, KC_A},
+    [1] = {KC_A, KC_D},
+    [2] = {KC_W, KC_S},
+    [3] = {KC_S, KC_W},
+};
 // clang-format on
