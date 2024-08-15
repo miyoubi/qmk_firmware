@@ -1,6 +1,6 @@
 {
-    "manufacturer": "HS",
-    "keyboard_name": "RK839",
+    "manufacturer": "RK",
+    "keyboard_name": "R65",
     "maintainer": "sdk66",
     "bootloader": "wb32-dfu",
     "diode_direction": "ROW2COL",
@@ -18,7 +18,7 @@
         "rgb_matrix": true
     },
     "matrix_pins": {
-        "cols": ["C9", "C8", "C7", "A8", "C6", "B14", "B13", "B12", "C1", "C2", "A10", "C3", "A6", "C4", "C5"],
+        "cols": ["C0", "C1", "C2", "C3", "A6", "B10", "B11", "B12", "B13", "B14", "A10", "C6", "C7", "C8", "C9", "C4"],
         "rows": ["A1", "A2", "A3", "A4", "C13"]
     },
     "processor": "WB32FQ95",
@@ -138,9 +138,9 @@
             {"matrix": [4, 14], "x": 224, "y": 64, "flags": 4}
         ]
     },
-    "url": "",
+    "url": "http://www.rkgaming.com",
     "usb": {
-        "device_version": "0.0.1",
+        "device_version": "0.0.2",
         "force_nkro": true,
         "pid": "0xE453",
         "suspend_wakeup_delay": 1000,
@@ -166,7 +166,7 @@
                 {"matrix": [0, 11], "x": 11, "y": 0},
                 {"matrix": [0, 12], "x": 12, "y": 0},
                 {"matrix": [0, 13], "x": 13, "y": 0, "w": 2},
-                {"matrix": [0, 14], "x": 15, "y": 0},
+                {"matrix": [0, 15], "x": 15, "y": 0},
                 {"matrix": [1, 0], "x": 0, "y": 1, "w": 1.5},
                 {"matrix": [1, 1], "x": 1.5, "y": 1},
                 {"matrix": [1, 2], "x": 2.5, "y": 1},
@@ -194,7 +194,7 @@
                 {"matrix": [2, 9], "x": 9.75, "y": 2},
                 {"matrix": [2, 10], "x": 10.75, "y": 2},
                 {"matrix": [2, 11], "x": 11.75, "y": 2},
-                {"matrix": [2, 13], "x": 12.75, "y": 2, "w": 2.25},
+                {"matrix": [2, 12], "x": 12.75, "y": 2, "w": 2.25},
                 {"matrix": [2, 14], "x": 15, "y": 2},
                 {"matrix": [3, 0], "x": 0, "y": 3, "w": 2.25},
                 {"matrix": [3, 1], "x": 2.25, "y": 3},
@@ -214,8 +214,8 @@
                 {"matrix": [4, 1], "x": 1.25, "y": 4, "w": 1.25},
                 {"matrix": [4, 2], "x": 2.5, "y": 4, "w": 1.25},
                 {"matrix": [4, 5], "x": 3.75, "y": 4, "w": 6.25},
-                {"matrix": [4, 8], "x": 10, "y": 4, "w": 1.25},
-                {"matrix": [4, 9], "x": 11.25, "y": 4, "w": 1.25},
+                {"matrix": [4, 9], "x": 10, "y": 4, "w": 1.25},
+                {"matrix": [4, 10], "x": 11.25, "y": 4, "w": 1.25},
                 {"matrix": [4, 11], "x": 13, "y": 4},
                 {"matrix": [4, 13], "x": 14, "y": 4},
                 {"matrix": [4, 14], "x": 15, "y": 4}
