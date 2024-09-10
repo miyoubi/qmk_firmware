@@ -27,6 +27,7 @@
         "on_state": 0
     },
     "rgb_matrix": {
+	"sleep": true,
         "animations": {
             "alphas_mods": true,
             "band_pinwheel_sat": true,
